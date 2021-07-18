@@ -12,3 +12,12 @@ class BahVNA(NanoVNA):
     def __init__(self, iface: Interface):
         super().__init__(iface)
         self.sweep_max_freq_Hz = 6000e6
+        self.datapoints = 11
+
+    def readValues(self, value):
+        timeout = self.serial.timeout
+        self.serial.timeout = None
+        rv = super().readValues(value)
+        self.serial.timeout = timeout
+
+        return rv

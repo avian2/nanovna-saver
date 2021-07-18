@@ -26,6 +26,7 @@ import serial
 from serial.tools import list_ports
 
 from NanoVNASaver.Hardware.AVNA import AVNA
+from NanoVNASaver.Hardware.BahVNA import BahVNA
 from NanoVNASaver.Hardware.NanoVNA import NanoVNA
 from NanoVNASaver.Hardware.NanoVNA_F import NanoVNA_F
 from NanoVNASaver.Hardware.NanoVNA_F_V2 import NanoVNA_F_V2
@@ -114,6 +115,8 @@ def get_VNA(iface: Interface) -> 'VNA':
     if info.find("NanoVNA") >= 0:
         logger.info("Type: Generic NanoVNA")
         return NanoVNA(iface)
+    if info.find("BahVNA") >= 0:
+        return BahVNA(iface)
     logger.warning("Did not recognize NanoVNA type from firmware.")
     return NanoVNA(iface)
 

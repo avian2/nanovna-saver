@@ -32,7 +32,7 @@ from NanoVNASaver.Hardware.NanoVNA_F_V2 import NanoVNA_F_V2
 from NanoVNASaver.Hardware.NanoVNA_H import NanoVNA_H
 from NanoVNASaver.Hardware.NanoVNA_H4 import NanoVNA_H4
 from NanoVNASaver.Hardware.NanoVNA_V2 import NanoVNA_V2
-from NanoVNASaver.Hardware.Serial import drain_serial, Interface
+from NanoVNASaver.Hardware.Serial import drain_serial, SocketInterface, Interface
 
 
 logger = logging.getLogger(__name__)
@@ -61,6 +61,11 @@ def _fix_v2_hwinfo(dev):
 # Get list of interfaces with VNAs connected
 def get_interfaces() -> List[Interface]:
     interfaces = []
+
+    iface = SocketInterface('network', 'BahVNA')
+    iface.port = 'socket://localhost:6273'
+    interfaces.append(iface)
+
     # serial like usb interfaces
     for d in list_ports.comports():
         if platform.system() == 'Windows' and d.vid is None:

@@ -20,6 +20,7 @@ import logging
 from threading import Lock
 
 import serial
+from serial.urlhandler.protocol_socket import Serial as SocketSerial
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,20 @@ class Interface(serial.Serial):
     def __init__(self, interface_type: str, comment, *args, **kwargs):
         super().__init__(*args, **kwargs)
         assert interface_type in ('serial', 'usb', 'bt', 'network')
+        self.type = interface_type
+        self.comment = comment
+        self.port = None
+        self.baudrate = 115200
+        self.timeout = 0.05
+        self.lock = Lock()
+
+    def __str__(self):
+        return f"{self.port} ({self.comment})"
+
+class SocketInterface(SocketSerial):
+    def __init__(self, interface_type: str, comment, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        assert interface_type == 'network'
         self.type = interface_type
         self.comment = comment
         self.port = None

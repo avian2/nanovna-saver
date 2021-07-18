@@ -22,7 +22,7 @@ from urllib import request, error
 
 from PyQt5 import QtWidgets, QtCore
 
-from NanoVNASaver.About import VERSION_URL, INFO_URL
+from NanoVNASaver.About import INFO_URL
 from NanoVNASaver.Version import Version
 
 logger = logging.getLogger(__name__)
@@ -150,54 +150,4 @@ class AboutWindow(QtWidgets.QWidget):
             self.app.settings.setValue("CheckForUpdates", "Ask")
 
     def findUpdates(self, automatic=False):
-        latest_version = Version()
-        latest_url = ""
-        try:
-            req = request.Request(VERSION_URL)
-            req.add_header('User-Agent', "NanoVNA-Saver/" + self.app.version)
-            for line in request.urlopen(req, timeout=3):
-                line = line.decode("utf-8")
-                if line.startswith("VERSION ="):
-                    latest_version = Version(line[8:].strip(" \"'"))
-                if line.startswith("RELEASE_URL ="):
-                    latest_url = line[13:].strip(" \"'")
-        except error.HTTPError as e:
-            logger.exception("Checking for updates produced an HTTP exception: %s", e)
-            self.updateLabel.setText("Connection error.")
-            return
-        except TypeError as e:
-            logger.exception("Checking for updates provided an unparseable file: %s", e)
-            self.updateLabel.setText("Data error reading versions.")
-            return
-        except error.URLError as e:
-            logger.exception("Checking for updates produced a URL exception: %s", e)
-            self.updateLabel.setText("Connection error.")
-            return
-
-        logger.info("Latest version is %s", latest_version)
-        this_version = Version(self.app.version)
-        logger.info("This is %s", this_version)
-        if latest_version > this_version:
-            logger.info("New update available: %s!", latest_version)
-            if automatic:
-                QtWidgets.QMessageBox.information(
-                    self,
-                    "Updates available",
-                    f"There is a new update for NanoVNA-Saver available!\n"
-                    f"Version {latest_version}\n\n"
-                    f'Press "About" to find the update.')
-            else:
-                QtWidgets.QMessageBox.information(
-                    self, "Updates available",
-                    "There is a new update for NanoVNA-Saver available!")
-            self.updateLabel.setText(
-                f'<a href="{latest_url}">New version available</a>.')
-            self.updateLabel.setOpenExternalLinks(True)
-        else:
-            # Probably don't show a message box, just update the screen?
-            # Maybe consider showing it if not an automatic update.
-            #
-            self.updateLabel.setText(
-                f"Last checked: "
-                f"{strftime('%Y-%m-%d %H:%M:%S', localtime())}")
         return

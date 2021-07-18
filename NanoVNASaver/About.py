@@ -18,9 +18,6 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 VERSION = "0.3.9"
-VERSION_URL = (
-    "https://raw.githubusercontent.com/"
-    "NanoVNA-Saver/nanovna-saver/master/NanoVNASaver/About.py")
 
 INFO_URL = "https://github.com/NanoVNA-Saver/nanovna-saver"
 INFO = f"""NanoVNASaver {VERSION}
